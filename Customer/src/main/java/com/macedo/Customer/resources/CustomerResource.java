@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.macedo.Customer.dtos.CustomerDTO;
+import com.macedo.Customer.entities.Customer;
 import com.macedo.Customer.services.CustomerService;
 
 @RefreshScope
@@ -39,8 +40,8 @@ public class CustomerResource {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable Integer id) {
-        return new ResponseEntity<CustomerDTO>((customerService.getCustomerById(id)), HttpStatus.OK);
+    public ResponseEntity<Customer> getCustomerById(@PathVariable Integer id) {
+        return new ResponseEntity<Customer>((customerService.getCustomerById(id)), HttpStatus.OK);
     }
 
     @PostMapping

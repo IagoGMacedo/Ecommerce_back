@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ShippingTaxService {
     private final ShippingTaxRepository shippingTaxRepository;
-    private final CustomerRepository customerRepository;
     private final Patcher patcher;
 
     public List<ShippingTaxDTO> getShippingTaxes(ShippingTaxDTO filtro) {

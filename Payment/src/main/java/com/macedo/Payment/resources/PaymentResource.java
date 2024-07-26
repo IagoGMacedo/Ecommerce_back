@@ -8,11 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.macedo.Payment.dtos.RegisterPaymentDTO;
 import com.macedo.Payment.dtos.ResponsePaymentDTO;
+import com.macedo.Payment.entities.Payment;
 import com.macedo.Payment.services.PaymentService;
 
 @RefreshScope
@@ -35,6 +37,12 @@ public class PaymentResource {
     @GetMapping("/customer/{id}")
     public ResponseEntity<List<ResponsePaymentDTO>> getPaymentsByCustomerId(@PathVariable Integer id) {
         return new ResponseEntity<List<ResponsePaymentDTO>>((paymentService.getPaymentsByCustomerId(id)), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<Payment> savePayment(Payment payment){
+        return new ResponseEntity<Payment>((paymentService.savePayment(payment)), HttpStatus.OK);
+        
     }
 
 

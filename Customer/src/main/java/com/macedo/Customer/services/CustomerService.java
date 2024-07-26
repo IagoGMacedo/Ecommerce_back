@@ -40,10 +40,10 @@ public class CustomerService {
         return toDTOList(customerRepository.findAll(example));
     }
 
-    public CustomerDTO getCustomerById(Integer id) {
+    public Customer getCustomerById(Integer id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("customer"));
-        return toDTO(customer);
+        return (customer);
     }
 
     public CustomerDTO createCustomer(CustomerDTO customerDTO) {

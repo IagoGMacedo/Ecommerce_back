@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -30,10 +31,15 @@ import com.macedo.Purchase.entities.Purchase;
 import com.macedo.Purchase.entities.ShippingTax;
 import com.macedo.Purchase.exceptions.BusinessRuleException;
 import com.macedo.Purchase.exceptions.NotFoundException;
+import com.macedo.Purchase.feignclients.AddressFeignClient;
+import com.macedo.Purchase.feignclients.CreditCardFeignClient;
+import com.macedo.Purchase.feignclients.CustomerFeignClient;
+import com.macedo.Purchase.feignclients.PaymentFeignClient;
+import com.macedo.Purchase.feignclients.ProductFeignClient;
 import com.macedo.Purchase.repository.DiscountRepository;
+import com.macedo.Purchase.repository.ProductItemRepository;
 import com.macedo.Purchase.repository.PurchaseRepository;
 import com.macedo.Purchase.repository.ShippingTaxRepository;
-import com.macedo.Purchase.utils.Patcher;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,23 +48,21 @@ import lombok.RequiredArgsConstructor;
 public class PurchaseService {
     private final PurchaseRepository purchaseRepository;
 
-    private final CustomerRepository customerRepository;
+    private final CustomerFeignClient customerClient;
 
-    private final AddressRepository addressRepository;
+    private final AddressFeignClient addressClient;
 
-    private final ProductRepository productRepository;
+    private final ProductFeignClient productClient;
 
     private final ProductItemRepository productItemRepository;
 
-    private final PaymentRepository paymentRepository;
+    private final PaymentFeignClient paymentClient;
 
-    private final CreditCardRepository creditCardRepository;
+    private final CreditCardFeignClient creditCardClient;
 
     private final DiscountRepository discountRepository;
 
     private final ShippingTaxRepository shippingTaxRepository;
-
-    private final Patcher patcher;
 
     public List<ResponsePurchaseDTO> getPurchases() {
         return toDTOList(purchaseRepository.findAll());
@@ -71,9 +75,8 @@ public class PurchaseService {
     }
 
     public List<ResponsePurchaseDTO> getPurchasesByCustomerId(Integer customerId) {
-        Customer customer = customerRepository
-                .findById(customerId)
-                .orElseThrow(() -> new NotFoundException("customer"));
+        if(!customerClient.getCustomerById(customerId).getStatusCode().equals(HttpStatusCode.valueOf(200)))
+            throw new NotFoundException("customer");
 
         List<Purchase> list = purchaseRepository.findByCustomerId(customerId);
 
@@ -82,14 +85,10 @@ public class PurchaseService {
 
     public ResponsePurchaseDTO createPurchase(RegisterPurchaseDTO purchase) {
         Integer idCustomer = purchase.getIdCustomer();
-        Customer customer = customerRepository
-                .findById(idCustomer)
-                .orElseThrow(() -> new NotFoundException("customer"));
+        Customer customer = customerClient.getCustomerById(idCustomer).getBody();
 
         Integer idAddress = purchase.getIdAddress();
-        Address address = addressRepository
-                .findById(idAddress)
-                .orElseThrow(() -> new NotFoundException("address"));
+        Address address = addressClient.getAddressById(idAddress).getBody();
 
         BigDecimal shippingTax = BigDecimal.ZERO;
 
@@ -125,7 +124,7 @@ public class PurchaseService {
 
         purchaseRepository.save(newPurchase);
         productItemRepository.saveAll(productItems);
-        paymentRepository.save(payment);
+        paymentClient.savePayment(payment);
         newPurchase.setProductItems(productItems);
 
         return toDTO(newPurchase);
@@ -146,15 +145,13 @@ public class PurchaseService {
                 .stream()
                 .map(dto -> {
                     Integer idProduct = dto.getIdProduct();
-                    Product product = productRepository
-                            .findById(idProduct)
-                            .orElseThrow(() -> new NotFoundException("product"));
+                    Product product = productClient.getProductById(idProduct).getBody();
 
                     if (product.getStockQuantity() < dto.getQuantity()) {
                         throw new BusinessRuleException("Não existe a quantidade solicitada no estoque");
                     }
                     product.setStockQuantity(product.getStockQuantity() - dto.getQuantity());
-                    productRepository.save(product);
+                    productClient.saveProduct(product);
                     ProductItem productItem = new ProductItem();
                     productItem.setQuantity(dto.getQuantity());
                     productItem.setPurchase(newPurchase);
@@ -172,9 +169,8 @@ public class PurchaseService {
         if (payment.getPaymentMethod() == PaymentMethod.CARTAO_CREDITO
                 || payment.getPaymentMethod() == PaymentMethod.CARTAO_DEBITO) {
             Integer idCreditCard = dto.getIdCreditCard();
-            CreditCard creditCard = creditCardRepository
-                    .findById(idCreditCard)
-                    .orElseThrow(() -> new NotFoundException("credit card"));
+            CreditCard creditCard = creditCardClient.getCreditCardById(idCreditCard).getBody();
+                    
             payment.setCreditCard(creditCard);
 
             if (payment.getPaymentMethod() == PaymentMethod.CARTAO_CREDITO)

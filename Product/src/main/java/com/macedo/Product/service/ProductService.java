@@ -41,10 +41,10 @@ public class ProductService {
         return toDTOList(productRepository.findAll(example));
     }
 
-    public ProductDTO getProductById(Integer id) {
+    public Product getProductById(Integer id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("product"));
-        return toDTO(product);
+        return (product);
     }
 
     public List<ProductDTO> getProductsByCategoryId(Integer categoryId) {
@@ -52,6 +52,10 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException("category"));
 
         return toDTOList(list);
+    }
+
+    public Product saveProduct(Product product){
+        return productRepository.save(product);
     }
 
     public ProductDTO createProduct(ProductDTO Product) {

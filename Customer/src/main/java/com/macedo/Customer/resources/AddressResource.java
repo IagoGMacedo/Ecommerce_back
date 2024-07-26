@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.macedo.Customer.dtos.AddressDTO;
+import com.macedo.Customer.entities.Address;
 import com.macedo.Customer.services.AddressService;
 
 @RefreshScope
@@ -32,8 +33,8 @@ public class AddressResource {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<AddressDTO> getAddressById(@PathVariable Integer id) {
-        return new ResponseEntity<AddressDTO>((addressService.getAddressById(id)), HttpStatus.OK);
+    public ResponseEntity<Address> getAddressById(@PathVariable Integer id) {
+        return new ResponseEntity<Address>((addressService.getAddressById(id)), HttpStatus.OK);
     }
 
     @GetMapping("/customer/{id}")

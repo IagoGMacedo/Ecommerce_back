@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.macedo.Product.dtos.ProductDTO;
+import com.macedo.Product.entities.Product;
 import com.macedo.Product.service.ProductService;
 
 @RefreshScope
@@ -32,13 +33,18 @@ public class ProductResource {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ProductDTO> getProductById(@PathVariable Integer id) {
-        return new ResponseEntity<ProductDTO>((productService.getProductById(id)), HttpStatus.OK);
+    public ResponseEntity<Product> getProductById(@PathVariable Integer id) {
+        return new ResponseEntity<Product>((productService.getProductById(id)), HttpStatus.OK);
     }
 
     @GetMapping("/category/{id}")
     public ResponseEntity<List<ProductDTO>> getProductsByCategoryId(@PathVariable Integer id) {
         return new ResponseEntity<List<ProductDTO>>((productService.getProductsByCategoryId(id)), HttpStatus.OK);
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<Product> saveProduct(@RequestBody Product product) {
+        return new ResponseEntity<Product>((productService.saveProduct(product)), HttpStatus.CREATED);
     }
 
     @PostMapping

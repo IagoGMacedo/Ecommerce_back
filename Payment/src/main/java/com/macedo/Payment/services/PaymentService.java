@@ -18,6 +18,8 @@ import com.macedo.Payment.entities.CreditCard;
 import com.macedo.Payment.entities.Customer;
 import com.macedo.Payment.entities.Payment;
 import com.macedo.Payment.entities.PaymentMethod;
+import com.macedo.Payment.feignClients.CreditCardFeignClient;
+import com.macedo.Payment.feignClients.CustomerFeignClient;
 import com.macedo.Payment.repository.PaymentRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,11 +30,13 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
 
-    private final PurchaseRepository purchaseRepository;
+    private final CustomerFeignClient customerClient;
 
-    private final CustomerRepository customerRepository;
+    private final CreditCardFeignClient creditCardClient;
 
-    private final CreditCardRepository creditCardRepository;
+    public Payment savePayment(Payment payment){
+        return paymentRepository.save(payment);
+    }
 
     public List<ResponsePaymentDTO> getPayments(RegisterPaymentDTO filtro) {
         Payment obj = extractPayment(filtro);
@@ -53,9 +57,9 @@ public class PaymentService {
     }
 
     public List<ResponsePaymentDTO> getPaymentsByCustomerId(Integer customerId) {
-        Customer customer = customerRepository
-                .findById(customerId)
-                .orElseThrow(() -> new NotFoundException("customer"));
+        Customer customer = customerClient.getCustomerById(customerId).getBody();
+        if(customer == null)
+            throw new NotFoundException("customer");
 
         List<Payment> list = paymentRepository.findByCustomerId(customerId)
                 .orElseThrow(() -> new NotFoundException("customer"));
@@ -69,9 +73,9 @@ public class PaymentService {
         if (payment.getPaymentMethod() == PaymentMethod.CARTAO_CREDITO
                 || payment.getPaymentMethod() == PaymentMethod.CARTAO_DEBITO) {
             Integer idCreditCard = dto.getIdCreditCard();
-            CreditCard creditCard = creditCardRepository
-                    .findById(idCreditCard)
-                    .orElseThrow(() -> new NotFoundException("credit card"));
+            CreditCard creditCard = creditCardClient.getCreditCardById(idCreditCard).getBody();
+            if(creditCard == null)
+                throw new NotFoundException("credit card");
             payment.setCreditCard(creditCard);
 
             if (payment.getPaymentMethod() == PaymentMethod.CARTAO_CREDITO)

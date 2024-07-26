@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.macedo.Customer.dtos.RegisterCreditCardDTO;
 import com.macedo.Customer.dtos.ResponseCreditCardDTO;
+import com.macedo.Customer.entities.CreditCard;
 import com.macedo.Customer.services.CreditCardService;
 
 @RefreshScope
 @RestController
-@RequestMapping(value = "/creditcards")
+@RequestMapping(value = "/creditCards")
 public class CreditCardResource {
     @Autowired
     private CreditCardService creditCardService;
@@ -34,8 +35,8 @@ public class CreditCardResource {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ResponseCreditCardDTO> getCreditCardById(@PathVariable Integer id) {
-            return new ResponseEntity<ResponseCreditCardDTO>((creditCardService.getCreditCardById(id)),
+    public ResponseEntity<CreditCard> getCreditCardById(@PathVariable Integer id) {
+            return new ResponseEntity<CreditCard>((creditCardService.getCreditCardById(id)),
                             HttpStatus.OK);
     }
 

@@ -17,6 +17,7 @@ import com.macedo.Customer.entities.Customer;
 import com.macedo.Customer.entities.Product;
 import com.macedo.Customer.entities.ProductItem;
 import com.macedo.Customer.entities.ShoppingCart;
+import com.macedo.Customer.feignclients.ProductFeignClient;
 import com.macedo.Customer.repository.CustomerRepository;
 import com.macedo.Customer.repository.ProductItemRepository;
 import com.macedo.Customer.repository.ShoppingCartRepository;
@@ -29,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class ShoppingCartService {
 
     private final ShoppingCartRepository shoppingCartRepository;
-    private final ProductRepository productRepository; //aqui vai ter que pegar
+    private final ProductFeignClient productClient; //aqui vai ter que pegar
 
     private final ProductItemRepository productItemRepository;
     private final CustomerRepository customerRepository;
@@ -109,9 +110,9 @@ public class ShoppingCartService {
 
     private ProductItem extractProductItem(ShoppingCart shoppingCart, ProductItemDTO dto) {
         Integer idProduct = dto.getIdProduct();
-        Product product = productRepository
-                .findById(idProduct)
-                .orElseThrow(() -> new NotFoundException("product"));
+        Product product = productClient.getProductById(idProduct).getBody();
+        if(product == null)
+            throw new NotFoundException("product");
 
         ProductItem productItem = new ProductItem();
         productItem.setQuantity(dto.getQuantity());

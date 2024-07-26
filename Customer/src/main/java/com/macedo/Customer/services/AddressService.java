@@ -40,10 +40,10 @@ public class AddressService {
         return toDTOList(addressRepository.findAll(example));
     }
 
-    public AddressDTO getAddressById(Integer id) {
+    public Address getAddressById(Integer id) {
         Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("address"));
-        return toDTO(address);
+        return address;
     }
 
     public List<AddressDTO> getAddressesByCustomerId(Integer customerId) {

@@ -40,10 +40,10 @@ public class CreditCardService {
         return toDTOList(creditCardRepository.findAll(example));
     }
 
-    public ResponseCreditCardDTO getCreditCardById(Integer id) {
+    public CreditCard getCreditCardById(Integer id) {
         CreditCard creditCard = creditCardRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("credit card"));
-        return toDTO(creditCard);
+        return (creditCard);
     }
 
     public List<ResponseCreditCardDTO> getCreditCardsByCustomerId(Integer customerId) {
