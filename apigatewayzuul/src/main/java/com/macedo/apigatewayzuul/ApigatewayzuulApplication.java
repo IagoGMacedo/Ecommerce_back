@@ -1,17 +1,17 @@
-package com.macedo.Customer;
+package com.macedo.apigatewayzuul;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 
 @EnableDiscoveryClient
+@EnableZuulProxy
 @SpringBootApplication
-@EnableFeignClients
-public class CustomerApplication {
+public class ApigatewayzuulApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CustomerApplication.class, args);
+		SpringApplication.run(ApigatewayzuulApplication.class, args);
 	}
 
 }

@@ -22,7 +22,7 @@ import com.macedo.Customer.services.AddressService;
 
 @RefreshScope
 @RestController
-@RequestMapping(value = "/addresses")
+@RequestMapping("addresses")
 public class AddressResource {
     @Autowired
     private AddressService addressService;
