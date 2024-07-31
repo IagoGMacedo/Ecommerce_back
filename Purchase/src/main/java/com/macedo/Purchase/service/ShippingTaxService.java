@@ -1,26 +1,30 @@
 package com.macedo.Purchase.service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import com.macedo.Purchase.dtos.ShippingTaxDTO;
 import com.macedo.Purchase.entities.ShippingTax;
 import com.macedo.Purchase.exceptions.NotFoundException;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.stereotype.Service;
+
+
 import com.macedo.Purchase.repository.ShippingTaxRepository;
 import com.macedo.Purchase.utils.Patcher;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ShippingTaxService {
+
     private final ShippingTaxRepository shippingTaxRepository;
+
     private final Patcher patcher;
 
     public List<ShippingTaxDTO> getShippingTaxes(ShippingTaxDTO filtro) {
@@ -77,7 +81,7 @@ public class ShippingTaxService {
     private ShippingTax extractShippingTax(ShippingTaxDTO dto) {
         ShippingTax shippingTax = new ShippingTax();
         shippingTax.setState(dto.getState());
-        shippingTax.setValue(dto.getValue());
+        shippingTax.setTaxValue(dto.getTaxValue());
         return shippingTax;
     }
 
@@ -86,7 +90,7 @@ public class ShippingTaxService {
                 .builder()
                 .id(shippingTax.getId())
                 .state(shippingTax.getState())
-                .value(shippingTax.getValue())
+                .taxValue(shippingTax.getTaxValue())
                 .build();
     }
 
@@ -98,4 +102,6 @@ public class ShippingTaxService {
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
+
+
 }

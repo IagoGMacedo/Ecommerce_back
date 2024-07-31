@@ -26,5 +26,5 @@ public class ShippingTax {
     private String state;
 
     @Column
-    private BigDecimal value; //valor
+    private BigDecimal taxValue; //valor
 }

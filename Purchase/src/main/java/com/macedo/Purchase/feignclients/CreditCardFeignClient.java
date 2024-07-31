@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.macedo.Purchase.entities.CreditCard;
 
 @Component
-@FeignClient(name = "creditCard",path = "/creditCards")
+@FeignClient(name = "customer",path = "/creditCards")
 public interface CreditCardFeignClient {
     @GetMapping("{id}")
     public ResponseEntity<CreditCard> getCreditCardById(@PathVariable Integer id);

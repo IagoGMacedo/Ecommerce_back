@@ -1,6 +1,8 @@
 package com.macedo.Customer.entities;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,5 +35,6 @@ public class Category {
     @JoinTable(name="product_categories",
     joinColumns=@JoinColumn(name="category_id"), 
     inverseJoinColumns=@JoinColumn(name="product_id"))
+    @JsonIgnore
     private List<Product> products;
 }

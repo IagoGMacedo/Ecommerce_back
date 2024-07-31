@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 @Data
 @AllArgsConstructor
@@ -42,10 +43,11 @@ public class Purchase {
     @Column(precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
-    @OneToOne(mappedBy = "purchase", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "purchase", cascade = CascadeType.ALL)
     private Payment payment;
 
-    @ManyToOne
+    //@ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "address_id")
     private Address address;
 

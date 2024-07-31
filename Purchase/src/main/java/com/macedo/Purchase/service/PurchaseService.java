@@ -94,7 +94,7 @@ public class PurchaseService {
 
         Optional<ShippingTax> optShippingTax = shippingTaxRepository.findByState(address.getState());
         if (optShippingTax.isPresent()) {
-            shippingTax = optShippingTax.get().getValue();
+            shippingTax = optShippingTax.get().getTaxValue();
         }
 
         Integer idDiscount = purchase.getIdDiscount();
@@ -122,9 +122,11 @@ public class PurchaseService {
         newPurchase.setTotalPrice(totalPrice);
         newPurchase.setPayment(payment);
 
+        //paymentClient.savePayment(payment); isso não funciona
+
+
         purchaseRepository.save(newPurchase);
         productItemRepository.saveAll(productItems);
-        paymentClient.savePayment(payment);
         newPurchase.setProductItems(productItems);
 
         return toDTO(newPurchase);

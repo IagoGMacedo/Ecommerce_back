@@ -22,7 +22,7 @@ import com.macedo.Customer.services.ShoppingCartService;
 
 @RefreshScope
 @RestController
-@RequestMapping(value = "/shoppingCart")
+@RequestMapping(value = "/shoppingCarts")
 public class ShoppingCartResource {
     @Autowired
     private ShoppingCartService shoppingCartService;

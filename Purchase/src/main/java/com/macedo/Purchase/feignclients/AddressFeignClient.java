@@ -10,7 +10,7 @@ import com.macedo.Purchase.dtos.AddressDTO;
 import com.macedo.Purchase.entities.Address;
 
 @Component
-@FeignClient(name = "address",path = "/addresses")
+@FeignClient(name = "customer",path = "/addresses")
 public interface AddressFeignClient {
     
     @GetMapping("{id}")

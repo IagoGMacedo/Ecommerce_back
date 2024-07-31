@@ -14,5 +14,5 @@ import lombok.NoArgsConstructor;
 public class ShippingTaxDTO {
     private Integer id;
     private String state;
-    private BigDecimal value;
+    private BigDecimal taxValue;
 }
