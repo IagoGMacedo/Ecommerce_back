@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -75,7 +74,7 @@ public class PurchaseService {
     }
 
     public List<ResponsePurchaseDTO> getPurchasesByCustomerId(Integer customerId) {
-        if(!customerClient.getCustomerById(customerId).getStatusCode().equals(HttpStatusCode.valueOf(200)))
+        if(customerClient.getCustomerById(customerId).getBody() == null)
             throw new NotFoundException("customer");
 
         List<Purchase> list = purchaseRepository.findByCustomerId(customerId);

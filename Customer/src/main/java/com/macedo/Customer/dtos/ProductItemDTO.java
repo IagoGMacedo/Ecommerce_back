@@ -2,7 +2,6 @@ package com.macedo.Customer.dtos;
 
 import java.math.BigDecimal;
 
-import org.antlr.v4.runtime.misc.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
