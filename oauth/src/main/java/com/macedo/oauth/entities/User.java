@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.Collections;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,15 +29,14 @@ public class User implements UserDetails, Serializable {
 	private String email;
 	private String password;
 
-    private Set<Role> roles = new HashSet<>();
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-       return roles.stream()
-		.map(x -> 
-		new SimpleGrantedAuthority(
-			x.getRoleName()))
-			.collect(Collectors.toList());
+        // Supondo que 'role' é um campo do tipo Role
+        return Collections.singletonList(
+            new SimpleGrantedAuthority("ROLE_" + role.name())
+        );
     }
 
     @Override

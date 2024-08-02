@@ -39,8 +39,41 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
         http.authorizeRequests(requests -> requests
                 .antMatchers(PUBLIC).permitAll()
-                .antMatchers(HttpMethod.GET, OPERATOR).hasAnyRole("OPERATOR", "ADMIN")
-                .antMatchers(ADMIN).hasRole("ADMIN")
+
+                .antMatchers(HttpMethod.GET, "/api/customers").hasAnyRole("ADMIN", "SUPORTE")
+                .antMatchers(HttpMethod.GET, "/api/customers/**").hasAnyRole("ADMIN", "SUPORTE", "USER")
+                .antMatchers("/api/customers/**").hasAnyRole("USER", "ADMIN", "SUPORTE")
+
+                .antMatchers(HttpMethod.GET, "/api/addresses").hasAnyRole("ADMIN", "SUPORTE")
+                .antMatchers(HttpMethod.GET, "/api/addresses/**").hasAnyRole("ADMIN", "SUPORTE", "USER")
+                .antMatchers("/api/addresses/**").hasAnyRole("USER", "ADMIN", "SUPORTE")
+
+                .antMatchers(HttpMethod.GET, "/api/creditCards").hasAnyRole("ADMIN", "SUPORTE")
+                .antMatchers(HttpMethod.GET, "/api/creditCards/**").hasAnyRole("ADMIN", "SUPORTE", "USER")
+                .antMatchers("/api/creditCards/**").hasAnyRole("USER", "ADMIN", "SUPORTE")
+
+                .antMatchers(HttpMethod.GET, "/api/categories/**").hasAnyRole("ADMIN", "LOJISTA", "USER")
+                .antMatchers("/api/categories/**").hasAnyRole("ADMIN", "LOJISTA")
+
+                .antMatchers(HttpMethod.GET, "/api/products/**").hasAnyRole("ADMIN", "LOJISTA", "USER")
+                .antMatchers("/api/products/**").hasAnyRole("ADMIN", "LOJISTA")
+
+                .antMatchers(HttpMethod.GET, "/api/discounts/**").hasAnyRole("ADMIN", "LOJISTA", "USER")
+                .antMatchers("/api/discounts/**").hasRole("ADMIN")
+
+                .antMatchers("/api/shippingTaxes/**").hasRole("ADMIN")
+
+                .antMatchers(HttpMethod.GET, "/api/purchases").hasAnyRole("ADMIN", "SUPORTE")
+                .antMatchers(HttpMethod.GET, "/api/purchases/**").hasAnyRole("ADMIN", "SUPORTE", "USER")
+                .antMatchers(HttpMethod.POST, "/api/purchases/**").hasAnyRole("ADMIN", "SUPORTE", "USER")
+                .antMatchers("/api/purchases/**").hasAnyRole("ADMIN", "SUPORTE")
+
+                .antMatchers(HttpMethod.GET, "/api/payments").hasAnyRole("ADMIN", "SUPORTE")
+                .antMatchers(HttpMethod.GET, "/api/payments/**").hasAnyRole("ADMIN", "SUPORTE", "USER")
+
+                .antMatchers(HttpMethod.GET, "/api/shoppingCarts").hasAnyRole("ADMIN", "SUPORTE")
+                .antMatchers("/api/shoppingCarts/**").hasAnyRole("ADMIN", "SUPORTE", "USER")
+
                 .anyRequest().authenticated());
         http.cors(cors -> cors.configurationSource(configurationSource()));
     }

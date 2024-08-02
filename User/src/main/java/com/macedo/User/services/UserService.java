@@ -7,13 +7,8 @@ import org.springframework.stereotype.Service;
 import com.macedo.User.dtos.UserDTO;
 import com.macedo.User.entities.Role;
 import com.macedo.User.entities.User;
-import com.macedo.User.repository.RoleRepository;
 import com.macedo.User.repository.UserRepository;
 
-import java.util.Set;
-import java.util.List;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
     private final UserRepository userRepository;
-
-    private final RoleRepository roleRepository;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -34,12 +27,13 @@ public class UserService {
         return toDTO(userRepository.save(user));
     }
 
+
     private UserDTO toDTO(User user) {
         return UserDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .password(user.getPassword())
-                .roles(extractRoleNames(user.getRoles()))
+                .role(user.getRole().toString())
                 .build();
     }
 
@@ -47,19 +41,10 @@ public class UserService {
         User user = new User();
         user.setEmail(usuario.getEmail());
         user.setPassword(usuario.getPassword());
-
-        List<String> rolesInUpperCase = Arrays.stream(usuario.getRoles())
-                                          .map(role -> role.toUpperCase())
-                                          .collect(Collectors.toList());
-
-        user.setRoles(roleRepository.findByRoleNameIn(rolesInUpperCase));
+        String roleString = usuario.getRole().toUpperCase();
+        Role role = Role.valueOf(roleString);
+        user.setRole(role);
         return user;
-    }
-
-    private String[] extractRoleNames(Set<Role> roles) {
-        return roles.stream()
-                .map(role -> role.getRoleName().toUpperCase())
-                .toArray(String[]::new);
     }
 
 
